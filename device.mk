@@ -55,6 +55,10 @@ PRODUCT_PACKAGES += \
     update_engine_sideload \
     update_verifier
 
+PRODUCT_PACKAGES += \
+    create_pl_dev \
+    create_pl_dev.recovery
+
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
@@ -327,7 +331,7 @@ PRODUCT_COPY_FILES += \
 
 # Recovery
 PRODUCT_EXTRA_RECOVERY_KEYS += \
-    $(DEVICE_PATH)/security/aosp-testkey
+    $(DEVICE_PATH)/security/mindthegapps
 
 # Sensors
 PRODUCT_PACKAGES += \
