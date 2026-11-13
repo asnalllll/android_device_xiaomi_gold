@@ -153,6 +153,7 @@ ro.vendor.arm.gralloc.shared_access_usage_mask=0x50000000
 # HWUI
 debug.hwui.use_hint_manager=true
 debug.hwui.initialize_gl_always=1
+debug.hwui.renderer=skiagl
 
 # Media
 media.c2.hal.selection=aidl

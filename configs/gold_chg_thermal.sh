@@ -1,40 +1,41 @@
 #!/vendor/bin/sh
 
-# Pastikan mi_thermald tidak memutus arus secara tiba-tiba
-echo 10 > /sys/class/thermal/thermal_message/sconfig 2>/dev/null
-
+SCONFIG="/sys/class/thermal/thermal_message/sconfig"
 BATT_TEMP="/sys/class/power_supply/battery/temp"
 CHG_CURR="/sys/class/power_supply/battery/constant_charge_current"
 LAST_STATE=""
+TARGET=""
 
 while true; do
+    if [ -f "$SCONFIG" ]; then
+        CUR_SCONFIG=$(cat "$SCONFIG" 2>/dev/null)
+        if [ "$CUR_SCONFIG" != "10" ]; then
+            echo 10 > "$SCONFIG" 2>/dev/null
+        fi
+    fi
+
     if [ -f "$BATT_TEMP" ] && [ -f "$CHG_CURR" ]; then
         TEMP=$(cat "$BATT_TEMP")
-        # TEMP dalam satuan 0.1 C (contoh: 400 = 40.0 C)
         if [ "$TEMP" -ge 440 ]; then
-            # >= 44.0 C: turun aman (~10W)
             TARGET=2000000
             STATE="44"
         elif [ "$TEMP" -ge 420 ]; then
-            # 42.0 - 43.9 C: turun bertahap (~18W)
             TARGET=3300000
             STATE="42"
         elif [ "$TEMP" -ge 400 ]; then
-            # 40.0 - 41.9 C: turun sedikit (~24W)
             TARGET=4500000
             STATE="40"
         elif [ "$TEMP" -lt 395 ] || [ "$LAST_STATE" = "" ]; then
-            # < 39.5 C (hysteresis 0.5 C agar tidak naik-turun): Full Power 33W
             TARGET=6000000
             STATE="FULL"
-        else
-            # Antara 39.5 - 39.9 C: pertahankan state sebelumnya
-            TARGET=""
         fi
 
-        if [ -n "$TARGET" ] && [ "$STATE" != "$LAST_STATE" ]; then
-            echo "$TARGET" > "$CHG_CURR" 2>/dev/null
+        if [ -n "$TARGET" ]; then
             LAST_STATE="$STATE"
+            CUR_VAL=$(cat "$CHG_CURR" 2>/dev/null)
+            if [ "$CUR_VAL" != "$TARGET" ]; then
+                echo "$TARGET" > "$CHG_CURR" 2>/dev/null
+            fi
         fi
     fi
     sleep 5
