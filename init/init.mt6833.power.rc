@@ -1,2 +1,6 @@
 on late-init
     setprop vendor.powerhal.init 1
+
+on property:vendor.powerhal.init=1
+    write /sys/module/ged/parameters/gx_game_mode 1
+    write /sys/module/ged/parameters/enable_gpu_enhance 1

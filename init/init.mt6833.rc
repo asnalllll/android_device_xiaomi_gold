@@ -892,3 +892,13 @@ service mi_thermald /vendor/bin/mi_thermald
     user root
     group system
     seclabel u:r:mi_thermald:s0
+
+service gold_chg_thermal /vendor/bin/gold_chg_thermal.sh
+    class late_start
+    user root
+    group system
+    seclabel u:r:gold_thermal:s0
+
+on property:sys.boot_completed=1
+    write /sys/class/thermal/thermal_message/sconfig 10
+    start gold_chg_thermal

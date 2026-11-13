@@ -1,0 +1,13 @@
+type gold_thermal, domain;
+type gold_thermal_exec, exec_type, vendor_file_type, file_type;
+
+init_daemon_domain(gold_thermal)
+userdebug_or_eng(`permissive gold_thermal;')
+
+allow gold_thermal vendor_shell_exec:file rx_file_perms;
+allow gold_thermal vendor_toolbox_exec:file rx_file_perms;
+allow gold_thermal sysfs_batteryinfo:dir search;
+allow gold_thermal sysfs_batteryinfo:file rw_file_perms;
+allow gold_thermal sysfs_thermal:dir search;
+allow gold_thermal sysfs_thermal:file rw_file_perms;
+

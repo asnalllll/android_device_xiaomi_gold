@@ -235,6 +235,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     init.batterysecret.rc
 
+PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/configs/gold_chg_thermal.sh:$(TARGET_COPY_OUT_VENDOR)/bin/gold_chg_thermal.sh
+
 # Kernel module loading
 PRODUCT_PACKAGES += \
     init.mtkgki.rc
